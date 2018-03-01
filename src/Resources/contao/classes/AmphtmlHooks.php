@@ -19,6 +19,9 @@
 
 namespace Pdir;
 
+use Contao\System;
+use Contao\ThemeModel;
+
 class AmphtmlHooks extends \Controller
 {
     /*
@@ -41,6 +44,7 @@ class AmphtmlHooks extends \Controller
                 $ampLayout = (int) \PageModel::findByPk($objPage->rootId)->ampLayout;
                 $ampUseInLayout = \PageModel::findByPk($objPage->rootId)->ampUseInLayout;
                 $objLayout = \LayoutModel::findById($ampLayout);
+//                $theme = ThemeModel::findByPk($objLayout->pid);
 
                 // enable or disable columns in layout
                 $desMod = deserialize($objLayout->modules);
@@ -81,16 +85,18 @@ class AmphtmlHooks extends \Controller
                 } $objLayout->modules = serialize($desMod);
 
                 // load inline css from file or use user custom
-                if(file_exists("../files/amphtml/amphtml_custom.css"))
+                if(file_exists("../files/themes/amphtml/amphtml_custom.css"))
                 {
-                    $amphtmlCss = file_get_contents("http://".$_SERVER['HTTP_HOST']."/files/amphtml/amphtml_custom.css");
+                    $amphtmlCss = file_get_contents("http://".$_SERVER['HTTP_HOST']."/files/themes/amphtml/amphtml_custom.css");
                 }
                 else
                 {
-                    $amphtmlCss = file_get_contents("http://".$_SERVER['HTTP_HOST']."/files/amphtml/amphtml.css");
+                    $amphtmlCss = file_get_contents("http://".$_SERVER['HTTP_HOST']."/files/themes/amphtml/amphtml.css");
                 }
                 $objLayout->head = "<style amp-custom>".$amphtmlCss."</style>";
                 $objLayout->head .= '<link rel="canonical" href="'.str_replace('?amp', '', $strUrl).'" />';
+
+                unset($GLOBALS['TL_HOOKS']['generatePage']);
             }
         }
     }
@@ -102,7 +108,7 @@ class AmphtmlHooks extends \Controller
     {
         if(isset($_GET['amp']))
         {
-            return $strUrl = $strUrl . '?amp';
+            return $strUrl = '/'.$strUrl . '?amp';
         }
         return $strUrl;
     }

@@ -1,0 +1,12 @@
+<?php $this->extend('block_unsearchable'); ?>
+<?php $this->block('content'); ?>
+    <amp-carousel class="news_carousel" layout="responsive" height="250" width="400" type="slides" autoplay loop>
+        <?php foreach ($this->items as $item):?>
+            <div class="slide">
+                <amp-img src="<?= $item['src'] ?>"
+                    width="400" height="300" layout="fill"></amp-img>
+                <div class="caption"><a href="<?= $item['url'] ?>"><?= $item['headline'] ?></a></div>
+            </div>
+        <?php endforeach; ?>
+    </amp-carousel>
+<?php $this->endblock(); ?>
